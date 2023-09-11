@@ -13,9 +13,7 @@ https://bsky-migrate.onrender.com/follow
 | `follow`     | Accounts to follow (comma-separated)    | `stephaniehicks, anshulkundaje, jlsteenwyk`  |
 
 > [!NOTE]
-> 
 > **Accepted `handle` formats**: `abdnahid.bsky.social` or `abdnahid`
-> 
 > **Accepted `follow` formats**: `account1, account2, account3` or `account1,account2,account3`
 
 > [!WARNING]
