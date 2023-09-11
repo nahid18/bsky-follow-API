@@ -22,12 +22,10 @@ var ctx = context.Background()
 func main() {
 	r := gin.Default()
 
-	// GET endpoint that prints "Hello, World!"
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"message": "OK"})
 	})
 
-	// POST endpoint for login and follow handles
 	r.POST("/follow", func(c *gin.Context) {
 		redisUrl := os.Getenv("REDIS_URL")
 		opt, _ := redis.ParseURL(redisUrl)
@@ -44,7 +42,6 @@ func main() {
 
 		handleList := strings.Split(handlesToFollow, ",")
 
-		// Define the path to your CLI binary
 		cliPath := "./bsky"
 		loginCmd := exec.Command(cliPath, "login", handle, password)
 		loginErr := loginCmd.Run()
@@ -54,10 +51,8 @@ func main() {
 			return
 		}
 
-		// Create an array to store follow results
 		followResults := []FollowResult{}
 
-		// Loop through the handles to follow and execute the CLI follow command for each
 		for _, h := range handleList {
 			h = strings.TrimSpace(h)
 			if !strings.HasSuffix(h, ".bsky.social") {
@@ -74,7 +69,6 @@ func main() {
 			followResults = append(followResults, FollowResult{Handle: h, Output: string(followOutput)})
 		}
 
-		// Return the follow results as JSON
 		c.JSON(http.StatusOK, followResults)
 	})
 
