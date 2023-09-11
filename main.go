@@ -9,7 +9,6 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -30,12 +29,6 @@ func main() {
 
 	// POST endpoint for login and follow handles
 	r.POST("/follow", func(c *gin.Context) {
-		err := godotenv.Load(".env")
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"env error": err.Error()})
-			return
-		}
-
 		redisUrl := os.Getenv("REDIS_URL")
 		opt, _ := redis.ParseURL(redisUrl)
 		client := redis.NewClient(opt)
