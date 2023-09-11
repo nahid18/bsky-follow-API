@@ -1,4 +1,4 @@
-## Follow Multiple Handles on bsky.app
+## Follow Multiple Handles on bsky.app API
 
 ### Endpoint URL
 
