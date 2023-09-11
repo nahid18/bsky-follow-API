@@ -1,18 +1,24 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net/http"
+	"os"
 	"os/exec"
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
+	"github.com/redis/go-redis/v9"
 )
 
 type FollowResult struct {
 	Handle string `json:"handle"`
 	Output string `json:"output"`
 }
+
+var ctx = context.Background()
 
 func main() {
 	r := gin.Default()
@@ -24,7 +30,16 @@ func main() {
 
 	// POST endpoint for login and follow handles
 	r.POST("/follow", func(c *gin.Context) {
-		// Parse the handle, password, and handles to follow from the request
+		err := godotenv.Load(".env")
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"env error": err.Error()})
+			return
+		}
+
+		redisUrl := os.Getenv("REDIS_URL")
+		opt, _ := redis.ParseURL(redisUrl)
+		client := redis.NewClient(opt)
+
 		handle := c.PostForm("handle")
 		password := c.PostForm("password")
 		handlesToFollow := c.PostForm("follow")
@@ -34,15 +49,13 @@ func main() {
 			handle += ".bsky.social"
 		}
 
-		// Split the comma-separated handles into an array
 		handleList := strings.Split(handlesToFollow, ",")
 
 		// Define the path to your CLI binary
 		cliPath := "./bsky"
-
-		// Execute the login CLI command
 		loginCmd := exec.Command(cliPath, "login", handle, password)
 		loginErr := loginCmd.Run()
+
 		if loginErr != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"login error": loginErr.Error()})
 			return
@@ -53,23 +66,18 @@ func main() {
 
 		// Loop through the handles to follow and execute the CLI follow command for each
 		for _, h := range handleList {
-			// Trim leading and trailing whitespace
 			h = strings.TrimSpace(h)
-
-			// Check if the handle has ".bsky.social" at the end
 			if !strings.HasSuffix(h, ".bsky.social") {
 				h += ".bsky.social"
 			}
-
-			fmt.Println("Following " + h)
-
 			followCmd := exec.Command(cliPath, "follow", h)
 			followOutput, followErr := followCmd.CombinedOutput()
 			if followErr != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{"follow error": followErr.Error()})
 				return
 			}
-
+			fmt.Println("[FOLLOWED] " + h)
+			client.Incr(ctx, "count")
 			followResults = append(followResults, FollowResult{Handle: h, Output: string(followOutput)})
 		}
 
