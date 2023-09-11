@@ -1,2 +1,2 @@
-# Follow Multiple Handles in bsky.app
+# Follow Multiple Handles on bsky.app
 
