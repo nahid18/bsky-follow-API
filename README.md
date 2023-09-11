@@ -10,13 +10,16 @@ https://bsky-migrate.onrender.com/follow
 |--------------|------------------------------------------|------------------------|
 | `handle`     | Your bsky handle                     | `abdnahid`           |
 | `password`   | Your bsky password                   | `P@ssw0rd123`        |
-| `follow`     | Accounts to follow (comma-separated)    | `stephaniehicks,anshulkundaje,jlsteenwyk"`  |
+| `follow`     | Accounts to follow (comma-separated)    | `stephaniehicks, anshulkundaje, jlsteenwyk`  |
 
 > [!NOTE]
-> Accepted handle formats: abdnahid.bsky.social or abdnahid
+> 
+> **Accepted `handle` formats**: `abdnahid.bsky.social` or `abdnahid`
+> 
+> **Accepted `follow` formats**: `account1, account2, account3` or `account1,account2,account3`
 
 > [!WARNING]
-> Unaccepted handle format: @abdnahid.bsky.social
+> **Unaccepted `handle` format**: `@abdnahid.bsky.social`
 
 ### Using Python
 
@@ -27,7 +30,7 @@ url = "https://bsky-migrate.onrender.com/follow"
 payload = {
     "handle": "abdnahid",
     "password": "XXXXXX",
-    "follow": "stephaniehicks, anshulkundaje, jlsteenwyk"
+    "follow": "stephaniehicks,anshulkundaje,jlsteenwyk"
 }
 response = requests.post(url, data=payload)
 print(response.text)
@@ -39,9 +42,9 @@ library(httr)
 
 url <- "https://bsky-migrate.onrender.com/follow"
 payload <- list(
-  handle = "your_basky_handle",
-  password = "your_basky_password",
-  follow = "account1, account2, account3"
+  handle = "abdnahid",
+  password = "XXXXXX",
+  follow = "stephaniehicks, anshulkundaje, jlsteenwyk"
 )
 response <- POST(url, body = payload)
 content(response, "text")
