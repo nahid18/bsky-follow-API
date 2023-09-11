@@ -14,6 +14,7 @@ https://bsky-migrate.onrender.com/follow
 
 > [!NOTE]
 > **Accepted `handle` formats**: `abdnahid.bsky.social` or `abdnahid`
+> 
 > **Accepted `follow` formats**: `account1, account2, account3` or `account1,account2,account3`
 
 > [!WARNING]
