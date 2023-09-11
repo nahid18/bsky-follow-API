@@ -12,11 +12,11 @@ https://bsky-migrate.onrender.com/follow
 | `password`   | Your bsky password                   | `P@ssw0rd123`        |
 | `follow`     | Accounts to follow (comma-separated)    | `stephaniehicks,anshulkundaje,jlsteenwyk"`  |
 
-[!NOTE]
-Accepted handle formats: abdnahid.bsky.social or abdnahid
+> [!NOTE]
+> Accepted handle formats: abdnahid.bsky.social or abdnahid
 
-[!WARNING]
-Unaccepted handle format: @abdnahid.bsky.social
+> [!WARNING]
+> Unaccepted handle format: @abdnahid.bsky.social
 
 ### Using Python
 
@@ -46,3 +46,8 @@ payload <- list(
 response <- POST(url, body = payload)
 content(response, "text")
 ```
+
+### Acknowledgement
+
+The `bsky` CLI used in this project is from here: 
+https://github.com/mattn/bsky
