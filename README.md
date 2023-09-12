@@ -6,11 +6,11 @@ https://bsky-migrate.onrender.com/follow
 
 ### Request Payload Properties
 
-| Property     | Description                              | Example                |
-|--------------|------------------------------------------|------------------------|
-| `handle`     | Your bsky handle                     | `abdnahid`           |
-| `password`   | Your bsky password                   | `P@ssw0rd123`        |
-| `follow`     | Accounts to follow (comma-separated)    | `stephaniehicks, anshulkundaje, jlsteenwyk`  |
+| Property   | Description                          | Example                                     |
+| ---------- | ------------------------------------ | ------------------------------------------- |
+| `handle`   | Your bsky handle                     | `abdnahid`                                  |
+| `password` | Your bsky password                   | `P@ssw0rd123`                               |
+| `follow`   | Accounts to follow (comma-separated) | `stephaniehicks, anshulkundaje, jlsteenwyk` |
 
 > [!NOTE]
 > **Accepted `handle` formats**: `abdnahid.bsky.social` or `abdnahid`
@@ -31,7 +31,10 @@ payload = {
     "password": "XXXXXX",
     "follow": "stephaniehicks,anshulkundaje,jlsteenwyk"
 }
-response = requests.post(url, data=payload)
+headers = {
+    'Content-Type': 'application/json'
+}
+response = requests.post(url, data=payload, headers=headers)
 print(response.text)
 ```
 
@@ -45,7 +48,10 @@ payload <- list(
   password = "XXXXXX",
   follow = "stephaniehicks, anshulkundaje, jlsteenwyk"
 )
-response <- POST(url, body = payload)
+headers <- c(
+  `Content-Type` = "application/json"
+)
+response <- POST(url, body = payload, encode = "json", httr::add_headers(.headers=headers))
 content(response, "text")
 ```
 
