@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"strings"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
 )
@@ -72,5 +73,6 @@ func main() {
 		c.JSON(http.StatusOK, followResults)
 	})
 
+	r.Use(cors.Default())
 	r.Run(":8080")
 }
