@@ -24,35 +24,40 @@ https://bsky-migrate.onrender.com/follow
 
 ```python
 import requests
+import json
 
 url = "https://bsky-migrate.onrender.com/follow"
 payload = {
     "handle": "abdnahid",
-    "password": "XXXXXX",
+    "password": "your_password",
     "follow": "stephaniehicks,anshulkundaje,jlsteenwyk"
 }
 headers = {
-    'Content-Type': 'application/json'
+    "Content-Type": "application/json"
 }
-response = requests.post(url, data=payload, headers=headers)
+
+response = requests.post(url, headers=headers, data=json.dumps(payload))
 print(response.text)
 ```
 
 ### Using R
 ```R
 library(httr)
+library(jsonlite)
 
 url <- "https://bsky-migrate.onrender.com/follow"
-payload <- list(
-  handle = "abdnahid",
-  password = "XXXXXX",
+data <- list(
+  handle = "your_handle",
+  password = "your_password",
   follow = "stephaniehicks, anshulkundaje, jlsteenwyk"
 )
+json_data <- toJSON(data, auto_unbox = TRUE)
 headers <- c(
-  `Content-Type` = "application/json"
+  "Content-Type" = "application/json"
 )
-response <- POST(url, body = payload, encode = "json", httr::add_headers(.headers=headers))
+response <- POST(url, body = json_data, encode = "json", add_headers(headers))
 content(response, "text")
+
 ```
 
 ### Acknowledgement
