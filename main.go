@@ -9,12 +9,19 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	"github.com/redis/go-redis/v9"
 )
 
 type FollowResult struct {
 	Handle string `json:"handle"`
 	Output string `json:"output"`
+}
+
+type UserInput struct {
+	Handle   string `json:"handle"`
+	Password string `json:"password"`
+	Follow   string `json:"follow"`
 }
 
 var ctx = context.Background()
@@ -45,22 +52,33 @@ func main() {
 	})
 
 	r.POST("/follow", func(c *gin.Context) {
-		redisUrl := os.Getenv("REDIS_URL")
-		opt, _ := redis.ParseURL(redisUrl)
-		client := redis.NewClient(opt)
+		if c.ContentType() != "application/json" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Content-Type must be application/json"})
+			return
+		}
 
-		handle := c.PostForm("handle")
-		password := c.PostForm("password")
-		handlesToFollow := c.PostForm("follow")
+		var user UserInput
+
+		// Bind the JSON request body to the UserInput struct
+		if err := c.BindJSON(&user); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		// Create separate variables for handle, password, and follow
+		handle := user.Handle
+		password := user.Password
+		follow := user.Follow
 
 		handle = strings.TrimSpace(handle)
 		if !strings.HasSuffix(handle, ".bsky.social") {
 			handle += ".bsky.social"
 		}
 
-		handleList := strings.Split(handlesToFollow, ",")
+		handleList := strings.Split(follow, ",")
 
 		cliPath := "./bsky"
+
 		loginCmd := exec.Command(cliPath, "login", handle, password)
 		loginErr := loginCmd.Run()
 
@@ -68,6 +86,16 @@ func main() {
 			c.JSON(http.StatusInternalServerError, gin.H{"login error": loginErr.Error()})
 			return
 		}
+
+		envErr := godotenv.Load()
+		if envErr != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"env error": envErr.Error()})
+			return
+		}
+
+		redisUrl := os.Getenv("REDIS_URL")
+		opt, _ := redis.ParseURL(redisUrl)
+		client := redis.NewClient(opt)
 
 		followResults := []FollowResult{}
 
