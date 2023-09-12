@@ -9,7 +9,8 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
+	// NOTE: This is not needed in deployed environment
+	// "github.com/joho/godotenv"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -87,11 +88,12 @@ func main() {
 			return
 		}
 
-		envErr := godotenv.Load()
-		if envErr != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"env error": envErr.Error()})
-			return
-		}
+		// NOTE: This is not needed in deployed environment
+		// envErr := godotenv.Load()
+		// if envErr != nil {
+		// 	c.JSON(http.StatusInternalServerError, gin.H{"env error": envErr.Error()})
+		// 	return
+		// }
 
 		redisUrl := os.Getenv("REDIS_URL")
 		opt, _ := redis.ParseURL(redisUrl)
