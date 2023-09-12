@@ -73,6 +73,10 @@ func main() {
 		c.JSON(http.StatusOK, followResults)
 	})
 
-	r.Use(cors.Default())
+	// Configure CORS middleware
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"*"} // Allow all origins
+	r.Use(cors.New(config))
+
 	r.Run(":8080")
 }
